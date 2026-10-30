@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Periodicity Lab</title>
+<style>
+html{color-scheme:light}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: lab bench, seventh in the series. Name strip + five station tabs; each station is a diagram stage beside a control column (stacks on phones). */
+/* Layout: lab bench, fifth in the series. Name strip + six station tabs; each station is a diagram stage beside a control column (stacks on phones). */
+:root{
+  --bg:#ebf0ee; --surface:#ffffff; --surface-2:#f1f5f3; --ink:#15211d; --muted:#53645d; --line:#c6d3cd;
+  --xa:#0f766e; --xa-soft:#d2eee8; --da:#6b3fbf; --da-soft:#e7def8; --share:#b07800; --share-soft:#f7ebc6;
+  --good:#1f7d48; --good-soft:#d9f0e2; --bad:#b3382f; --bad-soft:#f7dcd8;
+  --el-h:#f6f8f7; --el-c:#3a4440; --el-n:#3a63c4; --el-o:#cf4337; --el-si:#c08a32; --el-cl:#3c974a; --el-br:#9a3a2a; --el-i:#6a3fa0;
+  --el-f:#5f9e3f; --el-s:#b48a12; --el-p:#c96a22; --el-b:#c26d60; --el-be:#6d8231; --el-al:#7d8296; --el-xe:#23808f; --el-se:#9a6f30; --el-na:#7b52bd; --el-mg:#2a8466;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f1715; --surface:#17221f; --surface-2:#1d2b27; --ink:#e3ece8; --muted:#94a8a0; --line:#2b3c36;
+  --xa:#4fd1c0; --xa-soft:#133a35; --da:#b496f2; --da-soft:#2c2244; --share:#f0c14b; --share-soft:#3a3016;
+  --good:#62cf91; --good-soft:#15352a; --bad:#f2837a; --bad-soft:#3d1d1b;
+  --el-h:#dfe6e3; --el-c:#8d9a95; --el-n:#7b9cf0; --el-o:#ef6b5f; --el-si:#e0b062; --el-cl:#66c873; --el-br:#d0705e; --el-i:#a785dc; --el-f:#8fd16f; --el-s:#e3c04f; --el-p:#f0995a; --el-b:#e39a8f; --el-be:#a6bb63; --el-al:#aeb3c6; --el-xe:#5cc3d3; --el-se:#cfa261; --el-na:#b496f2; --el-mg:#5cc7a1; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0f1715; --surface:#17221f; --surface-2:#1d2b27; --ink:#e3ece8; --muted:#94a8a0; --line:#2b3c36;
+  --xa:#4fd1c0; --xa-soft:#133a35; --da:#b496f2; --da-soft:#2c2244; --share:#f0c14b; --share-soft:#3a3016;
+  --good:#62cf91; --good-soft:#15352a; --bad:#f2837a; --bad-soft:#3d1d1b;
+  --el-h:#dfe6e3; --el-c:#8d9a95; --el-n:#7b9cf0; --el-o:#ef6b5f; --el-si:#e0b062; --el-cl:#66c873; --el-br:#d0705e; --el-i:#a785dc; --el-f:#8fd16f; --el-s:#e3c04f; --el-p:#f0995a; --el-b:#e39a8f; --el-be:#a6bb63; --el-al:#aeb3c6; --el-xe:#5cc3d3; --el-se:#cfa261; --el-na:#b496f2; --el-mg:#5cc7a1; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
+.page{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 48px;display:grid;gap:22px}
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:14px}
+.brand svg{flex:none}
+.eyebrow{margin:0;font-size:.74rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700}
+h1{margin:2px 0 0;font-family:var(--f-display);font-weight:800;font-size:clamp(1.9rem,4.2vw,2.7rem);line-height:1.02;letter-spacing:-.025em;text-wrap:balance}
+h2{margin:0;font-family:var(--f-display);font-weight:600;font-size:1.06rem;letter-spacing:-.005em}
+p{margin:0}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px}
+.tabs button{font:inherit;font-weight:700;font-size:.92rem;border:0;background:transparent;color:var(--muted);padding:8px 12px;border-radius:10px;cursor:pointer;display:flex;gap:8px;align-items:baseline}
+.tabs button .n{font-family:var(--f-mono);font-size:.72rem;opacity:.8}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+:focus-visible{outline:3px solid var(--xa);outline-offset:2px}
+[role="tabpanel"]{display:grid;gap:22px}
+.intro{max-width:70ch;color:var(--muted)}
+.intro b{color:var(--ink)}
+.station{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:860px){.station{grid-template-columns:minmax(0,1fr)}}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px;min-width:0}
+.stage svg{width:100%;height:auto;display:block;max-width:100%}
+.stage-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.controls{display:grid;gap:20px;min-width:0}
+.ctl{display:grid;gap:9px;min-width:0}
+.small{font-size:.88rem;color:var(--muted)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.btn{font:inherit;font-weight:700;font-size:.93rem;padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;line-height:1.2}
+.btn:hover:not(:disabled){border-color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-weight:700;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;min-width:46px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip.ans-right{background:var(--good-soft);border-color:var(--good);color:var(--ink)}
+.chip.ans-wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--ink)}
+.grouplbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;max-width:100%;width:max-content}
+.seg button{font:inherit;font-weight:700;border:0;background:var(--surface);color:var(--muted);padding:8px 14px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.pill{display:inline-block;padding:3px 11px;border-radius:999px;font-weight:700;font-size:.82rem;background:var(--surface-2);border:1px solid var(--line)}
+.pill.on{background:var(--good-soft);border-color:var(--good)}
+.pill.warn{background:var(--share-soft);border-color:var(--share)}
+.verdict{border-radius:var(--r);padding:12px 14px;background:var(--surface);border:1px solid var(--line);display:grid;gap:4px}
+.verdict.good{background:var(--good-soft);border-color:var(--good)}
+.verdict.bad{background:var(--bad-soft);border-color:var(--bad)}
+.verdict strong{font-family:var(--f-display);font-size:1.08rem;font-weight:600}
+details.explain{border-top:1px solid var(--line);padding-top:10px}
+details.explain summary{cursor:pointer;font-weight:700}
+details.explain p{margin-top:6px;color:var(--muted);max-width:62ch}
+.msg{font-size:.92rem;min-height:1.4em}
+.msg.good{color:var(--good)} .msg.bad{color:var(--bad)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.84rem;color:var(--muted)}
+.legend .lx{color:var(--xa);font-weight:700;font-family:var(--f-mono)}
+.legend .ld{color:var(--da);font-weight:700;font-family:var(--f-mono)}
+.legend .ls{display:inline-block;width:14px;height:10px;border-radius:5px;background:var(--share-soft);border:1px solid var(--share);vertical-align:-1px;margin-right:4px}
+sub,sup{font-size:.68em;line-height:0}
+/* svg text + shapes */
+.t-sym{fill:var(--ink);font-family:var(--f-display);font-weight:800}
+.t-ink{fill:var(--ink);font-family:var(--f-mono)}
+.t-muted{fill:var(--muted);font-family:var(--f-mono)}
+.shell{fill:none;stroke:var(--muted);stroke-width:1.6}
+.shell.full{stroke:var(--good);stroke-width:2.2}
+.lens{fill:var(--share-soft);stroke:none}
+.x-a{stroke:var(--xa);stroke-width:2.6;stroke-linecap:round;fill:none}
+.d-b{fill:var(--da)}
+.bondline{stroke:var(--ink);stroke-width:3;stroke-linecap:round}
+
+/* station 2 + 3 canvases */
+.caption{font-size:.95rem;max-width:70ch}
+.slider{position:relative}
+.slider input{width:100%;accent-color:var(--xa);margin:0}
+.scale{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+.check{display:flex;gap:10px;align-items:center;font-weight:700;cursor:pointer}
+.check input{width:18px;height:18px;accent-color:var(--ink);margin:0}
+.findings{display:grid;gap:8px}
+.finding{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.finding .ft{font-weight:700}
+.finding .fd{grid-column:1/-1;font-size:.88rem;color:var(--muted)}
+.finding .st{font-size:.74rem;font-weight:700;padding:2px 9px;border-radius:999px;border:1px solid var(--line);align-self:start;white-space:nowrap}
+.finding.found{border-color:var(--good)}
+.finding.found .st{background:var(--good-soft);border-color:var(--good)}
+.strip-wrap{overflow-x:auto}
+#stripSvg{width:100%;min-width:300px;height:auto;display:block}
+.props{display:grid;gap:8px}
+.prop{display:grid;grid-template-columns:8.5em minmax(0,1fr);gap:4px 12px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.prop .pk{font-weight:700}
+.prop .pv{color:var(--muted);font-size:.92rem}
+.prop.known .pv{color:var(--ink)}
+@media (max-width:420px){.prop{grid-template-columns:minmax(0,1fr)}}
+/* station 4 */
+.sortbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.score{font-family:var(--f-display);font-weight:800;font-size:1.4rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:grid;gap:10px;align-content:start}
+.card.right{border-color:var(--good)}
+.card.wrong{border-color:var(--bad)}
+.card h3{margin:0;font-family:var(--f-display);font-weight:600;font-size:1.05rem}
+.card dl{margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;font-size:.88rem}
+.card .els{font-size:.86rem;color:var(--muted);margin-top:-6px}
+.card dt{color:var(--muted)}
+.card dd{margin:0;font-family:var(--f-mono);font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.card .choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.card .choices button{font:inherit;font-size:.8rem;font-weight:700;padding:7px 4px;border-radius:7px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);cursor:pointer;line-height:1.15}
+.card .choices button:hover:not(:disabled){border-color:var(--ink)}
+.card .choices button:disabled{cursor:default}
+.card .choices button.right{background:var(--good-soft);border-color:var(--good)}
+.card .choices button.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.card .why{font-size:.88rem;color:var(--muted)}
+.card .why b{color:var(--ink)}
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+table.cmp{border-collapse:collapse;width:100%;min-width:620px;font-size:.92rem}
+table.cmp th,table.cmp td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.cmp thead th{font-family:var(--f-display);font-weight:600;background:var(--surface-2)}
+table.cmp tbody th{font-weight:700;color:var(--muted);width:22%}
+table.cmp tr:last-child td,table.cmp tr:last-child th{border-bottom:0}
+/* quiz */
+.quizbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;max-width:860px}
+.quiz{display:grid;gap:14px;max-width:860px}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:10px}
+.q .qn{font-family:var(--f-mono);font-size:.74rem;color:var(--muted);font-weight:700}
+.q .qt{font-weight:700;font-size:1.02rem}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.opts{grid-template-columns:minmax(0,1fr)}}
+.opt{font:inherit;text-align:left;padding:9px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--good-soft);border-color:var(--good);font-weight:700}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.fb{font-size:.92rem;color:var(--muted)}
+.fb b{color:var(--ink)}
+footer{font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;max-width:95ch}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
+
+/* bonding lab */
+.formula-big{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,5vw,3rem);line-height:1;letter-spacing:-.01em}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:860px){.two{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px;align-content:start;min-width:0}
+.panel h2 .small,.ctl h2 .small{font-family:var(--f-body);font-weight:400}
+.panel svg{width:100%;height:auto;display:block;max-width:100%}
+.result{display:grid;gap:2px;border-radius:var(--r);padding:10px 12px;background:var(--surface-2);border:1px solid var(--line);min-width:0}
+.result .rv{font-family:var(--f-display);font-weight:800;font-size:1.25rem;line-height:1.15;overflow-wrap:anywhere}
+.result .rl{font-size:.72rem;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.result.hl{background:var(--xa-soft);border-color:var(--xa)}
+ol.steps{margin:0;padding:0;list-style:none;display:grid;gap:7px;counter-reset:st}
+ol.steps li{counter-increment:st;display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 10px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+ol.steps li::before{content:counter(st);grid-row:span 2;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:700;font-size:.8rem;font-family:var(--f-mono)}
+ol.steps .sh{font-weight:700}
+ol.steps .sm{font-size:.9rem;color:var(--muted);overflow-wrap:anywhere}
+.cv{width:100%;max-width:100%;display:block;border-radius:8px;background:var(--surface-2);touch-action:none;cursor:grab;aspect-ratio:4/3}
+.cv:active{cursor:grabbing}
+.cv.wide{aspect-ratio:16/10;cursor:default}
+.cvwrap{position:relative}
+.cvcover{position:absolute;inset:0;display:grid;place-items:center;border-radius:8px;background:color-mix(in srgb,var(--surface-2) 88%,transparent);font-family:var(--f-display);font-weight:800;font-size:clamp(1.2rem,3vw,1.6rem);color:var(--muted);text-align:center;padding:16px}
+.inrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.inrow label{font-weight:700;min-width:8.5em}
+select.num,.num{font:inherit;font-family:var(--f-mono);font-size:.95rem;padding:7px 9px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);min-width:0;max-width:100%}
+.stepper{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.stepper button{font:inherit;font-weight:800;width:34px;height:34px;border:0;background:var(--surface-2);color:var(--ink);cursor:pointer}
+.stepper button:disabled{opacity:.35;cursor:not-allowed}
+.stepper output{min-width:2.2em;text-align:center;font-family:var(--f-mono);font-weight:700}
+.tag{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--share-soft);border:1px solid var(--share);color:var(--ink);vertical-align:2px;margin-left:6px}
+.s-txt{fill:var(--ink);font-family:var(--f-mono);font-size:13px}
+.s-mut{fill:var(--muted);font-family:var(--f-mono);font-size:12px}
+.s-head{fill:var(--ink);font-family:var(--f-display);font-weight:600;font-size:15px}
+.s-sym{fill:var(--ink);font-family:var(--f-display);font-weight:800}
+.s-onfill{fill:#fff;font-family:var(--f-display);font-weight:800}
+.dlt{fill:var(--da);font-family:var(--f-mono);font-weight:700}
+.dlt.pos{fill:var(--xa)}
+.ebar{fill:var(--surface-2);stroke:var(--line)}
+.tiles .t-cat{fill:var(--xa-soft);stroke:var(--xa);stroke-width:1.5}
+.tiles .t-an{fill:var(--da-soft);stroke:var(--da);stroke-width:1.5}
+.grid13{display:grid;grid-template-columns:auto repeat(4,minmax(0,1fr));gap:6px;font-size:.84rem}
+.grid13 .gh{font-weight:700;color:var(--muted);font-size:.74rem;align-self:end;text-align:center}
+.grid13 .gr{font-weight:700;color:var(--muted);font-size:.74rem;align-self:center;white-space:nowrap}
+.grid13 button{font:inherit;font-size:.8rem;line-height:1.2;text-align:center;padding:7px 4px;border-radius:7px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);cursor:pointer;min-height:48px}
+.grid13 button.found{background:var(--xa-soft);border-color:var(--xa);color:var(--ink);font-weight:700}
+.grid13 button.found span{display:block;font-weight:400;font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+.grid13 .na{border:1px dashed var(--line);border-radius:7px;min-height:48px}
+.tablewrap{overflow-x:auto}
+.ticks{display:grid;gap:6px}
+.vs{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:stretch}
+.vs .or{align-self:center;font-weight:800;color:var(--muted);font-family:var(--f-display)}
+.vsbtn{font:inherit;text-align:left;padding:12px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface-2);color:var(--ink);cursor:pointer;display:grid;gap:3px;min-width:0}
+.vsbtn b{font-family:var(--f-display);font-size:1.15rem}
+.vsbtn .small{overflow-wrap:anywhere}
+.vsbtn:hover:not(:disabled){border-color:var(--ink)}
+.vsbtn:disabled{cursor:default}
+.vsbtn.right{background:var(--good-soft);border-color:var(--good)}
+.vsbtn.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.vsbtn .bpv{font-family:var(--f-mono);font-weight:700}
+#bpChart,#fxSvg,#vdwSvg,#dbSvg,#ibSvg,#bpSvg{width:100%;height:auto;display:block;max-width:100%}
+.chips.sm .chip{min-width:0;padding:5px 10px;font-size:.9rem}
+.bp-pt{cursor:pointer}
+.chip[aria-pressed="true"] .small{color:inherit;opacity:.75}
+.card dl{grid-template-columns:minmax(0,1fr) minmax(0,max-content)}
+.card dd{overflow-wrap:anywhere}
+.panel{grid-template-columns:minmax(0,1fr)}
+.panel .seg{width:auto}
+.panel>.pill{justify-self:start}
+.s-lab{fill:var(--ink);font-family:var(--f-body);font-size:14px}
+#bpChart{min-width:600px}
+/* particles lab */
+:root{--p-water:#2f6fc4;--p-ice:#6fa6dd;--p-n2:#7f8e88;--p-o2:#cf4337;--p-salt:#9aa6ad;--p-sugar:#c8925a;--p-sand:#c09325;--p-ink:#7b3fbf;--p-red:#d0443a;--p-yellow:#d9b21c;--p-blue:#2f6fc4;--p-green:#2f9a55;--p-iron:#3f4950;--p-nh3:#3a63c4;--p-hcl:#3c974a;--p-ring:#ffffff;--glass:#9bb0aa}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--p-water:#5c9ef0;--p-ice:#9cc6f0;--p-n2:#a7b5b0;--p-o2:#ef6b5f;--p-salt:#c9d2d6;--p-sugar:#e0ad78;--p-sand:#e0b74a;--p-ink:#b496f2;--p-red:#f2837a;--p-yellow:#f0cf4b;--p-blue:#5c9ef0;--p-green:#62cf91;--p-iron:#9aa6ad;--p-nh3:#7b9cf0;--p-hcl:#66c873;--p-ring:#ffffff;--glass:#6d827c}}
+:root[data-theme="dark"]{--p-water:#5c9ef0;--p-ice:#9cc6f0;--p-n2:#a7b5b0;--p-o2:#ef6b5f;--p-salt:#c9d2d6;--p-sugar:#e0ad78;--p-sand:#e0b74a;--p-ink:#b496f2;--p-red:#f2837a;--p-yellow:#f0cf4b;--p-blue:#5c9ef0;--p-green:#62cf91;--p-iron:#9aa6ad;--p-nh3:#7b9cf0;--p-hcl:#66c873;--p-ring:#ffffff;--glass:#6d827c}
+.cv.w16{aspect-ratio:16/10;cursor:default}
+.cv.w2{aspect-ratio:2/1;cursor:default}
+.cv.w3{aspect-ratio:3/1;cursor:default}
+.cv.w4{aspect-ratio:15/4;cursor:default}
+.cv.sq{aspect-ratio:1/1;cursor:default}
+.mini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mini .result .rv{font-size:1.05rem}
+.logbox{display:flex;flex-wrap:wrap;gap:6px}
+.logbox .pill{font-size:.8rem}
+table.facts{border-collapse:collapse;width:100%;font-size:.92rem}
+table.facts th,table.facts td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.facts thead th{font-family:var(--f-display);font-weight:600;background:var(--surface-2)}
+table.facts tbody th{color:var(--muted);font-weight:700;width:26%}
+table.facts td.q{color:var(--muted)}
+table.facts td.y{color:var(--good);font-weight:700}
+table.facts td.n{color:var(--bad);font-weight:700}
+.sortgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.scard{border:1px solid var(--line);border-radius:8px;background:var(--surface-2);padding:9px 10px;display:grid;gap:6px;align-content:start}
+.scard b{font-family:var(--f-display);font-weight:600}
+.scard .row button{font:inherit;font-size:.8rem;font-weight:700;padding:5px 8px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.scard.right{border-color:var(--good);background:var(--good-soft)}
+.scard.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.scard .why{font-size:.82rem;color:var(--muted)}
+.big{font-family:var(--f-display);font-weight:800;font-size:clamp(1.6rem,3.5vw,2.2rem);line-height:1}
+.seg.wrap{flex-wrap:wrap}
+.tbl-sm{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+.tbl-sm th,.tbl-sm td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}
+.tbl-sm th{color:var(--muted);font-size:.74rem;letter-spacing:.04em}
+#sepSvg,#chromSvg,#pumpSvg{width:100%;height:auto;display:block;max-width:100%}
+@media (max-width:560px){table.facts{font-size:.84rem}table.facts th,table.facts td{padding:6px 5px}}
+
+.phone-only{display:none}
+.solchart{display:grid;gap:6px}
+.solchart h3{margin:0;font:700 .9rem var(--f-body)}
+.solchart .sr{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:8px;align-items:center;font-size:.85rem}
+.solchart .sr.sel{font-weight:700}
+.solchart .bar{height:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.solchart .bar i{display:block;height:100%}
+.solchart .v{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+@media (max-width:560px){.phone-only{display:grid}#dsCanvas{aspect-ratio:1/1}
+  #sepSvg .s-lab{font-size:19px}#sepSvg .s-mut{font-size:16px}#chromSvg .s-txt,#chromSvg .s-mut{font-size:20px}#chromSvg .s-head{font-size:22px}}
+/* periodicity */
+:root{--b-s:#2f6fc4;--b-p:#b07800;--b-d:#7b3fbf;--b-f:#1f7d48;--st-m:#2f6fc4;--st-c:#b3382f;--st-mol:#b07800;--st-at:#7f8c92;--el-ar:#23808f;--e-up:#15211d}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--b-s:#5c9ef0;--b-p:#f0c14b;--b-d:#b496f2;--b-f:#62cf91;--st-m:#5c9ef0;--st-c:#f2837a;--st-mol:#f0c14b;--st-at:#9aa6ad;--el-ar:#5cc3d3;--e-up:#e3ece8}}
+:root[data-theme="dark"]{--b-s:#5c9ef0;--b-p:#f0c14b;--b-d:#b496f2;--b-f:#62cf91;--st-m:#5c9ef0;--st-c:#f2837a;--st-mol:#f0c14b;--st-at:#9aa6ad;--el-ar:#5cc3d3;--e-up:#e3ece8}
+#ptSvg,#arAtom,#arChart,#ieChart,#siChart,#mpChart,#mpStruct{width:100%;height:auto;display:block}
+.pt-cell{cursor:pointer}
+.pt-cell:focus{outline:none}
+.pt-cell:focus rect,.pt-cell:hover rect{stroke:var(--ink);stroke-width:2}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.85rem;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.cfg{font-family:var(--f-mono);font-size:1.02rem;overflow-wrap:anywhere}
+.boxes{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+.orb{display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.orb .row1{display:flex}
+.orb .bx{width:34px;height:38px;border:1.5px solid var(--ink);margin-left:-1.5px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-family:var(--f-mono);color:var(--ink)}
+.orb .bx:first-child{margin-left:0}
+.orb .bx .gone{color:var(--bad);text-decoration:line-through;opacity:.8}
+.orb .bx .hit{color:var(--bad);font-weight:700}
+select.num{min-width:84px}
+.rank{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.rank label{display:flex;gap:8px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface-2);font-weight:700}
+@media (max-width:560px){.ptwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}#ptSvg{min-width:640px}
+#ieChart .s-mut,#ieChart .s-txt,#mpChart .s-mut,#mpChart .s-txt,#arChart .s-mut,#arChart .s-txt{font-size:18px}#siChart .s-txt,#siChart .s-mut{font-size:15px}#arAtom .s-mut{font-size:17px}#arAtom .s-head{font-size:22px}#mpStruct .s-mut{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div class="brand">
+      <svg width="56" height="48" viewBox="0 0 56 48" aria-hidden="true">
+        <rect x="3" y="8" width="8" height="8" rx="1.5" fill="var(--b-s)"/><rect x="3" y="18" width="8" height="8" rx="1.5" fill="var(--b-s)"/><rect x="13" y="18" width="8" height="8" rx="1.5" fill="var(--b-s)"/>
+        <rect x="23" y="28" width="8" height="8" rx="1.5" fill="var(--b-d)"/><rect x="33" y="18" width="8" height="8" rx="1.5" fill="var(--b-p)"/><rect x="43" y="8" width="8" height="8" rx="1.5" fill="var(--b-p)"/><rect x="43" y="18" width="8" height="8" rx="1.5" fill="var(--b-p)"/>
+        <rect x="13" y="40" width="28" height="5" rx="1.5" fill="var(--b-f)"/>
+      </svg>
+      <div>
+        <p class="eyebrow">International AS Chemistry · OxfordAQA 9620 · 3.2.1</p>
+        <h1>Periodicity Lab</h1>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Lab stations">
+      <button role="tab" id="tab-blocks" aria-controls="p-blocks" aria-selected="true"><span class="n">1</span>Blocks</button>
+      <button role="tab" id="tab-radius" aria-controls="p-radius" aria-selected="false" tabindex="-1"><span class="n">2</span>Atomic radius</button>
+      <button role="tab" id="tab-ie" aria-controls="p-ie" aria-selected="false" tabindex="-1"><span class="n">3</span>Ionisation energies</button>
+      <button role="tab" id="tab-mp" aria-controls="p-mp" aria-selected="false" tabindex="-1"><span class="n">4</span>Melting points</button>
+      <button role="tab" id="tab-quiz" aria-controls="p-quiz" aria-selected="false" tabindex="-1"><span class="n">5</span>Quiz</button>
+    </nav>
+  </header>
+
+  <!-- 1 BLOCKS -->
+  <section id="p-blocks" role="tabpanel" aria-labelledby="tab-blocks">
+    <p class="intro">An element is classified as <b>s, p, d or f block</b> according to its position in the Periodic Table, which is set by its proton number. The block is the sub-shell that the <b>highest-energy electron</b> goes into. Click any element.</p>
+    <div class="panel">
+      <div class="ptwrap"><svg id="ptSvg" viewBox="0 0 760 420" role="img" aria-label="Periodic Table coloured by block"></svg></div>
+      <div class="legend"><span><i style="background:var(--b-s)"></i>s block</span><span><i style="background:var(--b-p)"></i>p block</span><span><i style="background:var(--b-d)"></i>d block</span><span><i style="background:var(--b-f)"></i>f block</span><span>Outlined row: Period 3</span></div>
+    </div>
+    <div class="two">
+      <div class="panel" aria-live="polite">
+        <div class="stage-head"><span class="big" id="elName">Sodium</span><span class="pill" id="elBlock">s block</span></div>
+        <p class="small" id="elMeta"></p>
+        <p class="cfg" id="elCfg"></p>
+        <p class="caption" id="elWhy"></p>
+      </div>
+      <div class="panel">
+        <div class="sortbar"><h2>Which block?</h2><span class="score" id="wbScore">0 / 0</span></div>
+        <p class="caption" id="wbQ"></p>
+        <div class="chips" id="wbOpts"></div>
+        <p class="caption" id="wbFb"></p>
+        <div class="row"><button class="btn" id="wbNext">Next element</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 RADIUS -->
+  <section id="p-radius" role="tabpanel" aria-labelledby="tab-radius" hidden>
+    <p class="intro">Across Period 3 each element has <b>one more proton</b>, and the extra electron goes into the <b>same (third) shell</b>. The inner 10 electrons shield the outer electrons by about the same amount, so the outer electrons are pulled <b>closer to the nucleus</b>.</p>
+    <div class="station">
+      <div class="stage">
+        <div class="stage-head"><span class="big" id="arName">Sodium</span><span class="pill" id="arPill">186 pm</span></div>
+        <svg id="arAtom" viewBox="0 0 520 458" role="img" aria-label="Model of a Period 3 atom showing nuclear charge, inner electrons and outer electrons"></svg>
+        <p class="caption" id="arCap"></p>
+      </div>
+      <div class="controls">
+        <div class="ctl"><h2>Step across Period 3</h2><div class="chips sm" id="arPick"></div></div>
+        <div class="mini" id="arRead"></div>
+        <svg id="arChart" viewBox="0 0 520 300" role="img" aria-label="Bar chart of atomic radius across Period 3"></svg>
+        <details class="explain"><summary>Why is argon left out?</summary><p>These radii are measured from bonded atoms (metallic radius for Na, Mg and Al; covalent radius for Si to Cl). Argon does not form bonds, so its radius has to be measured a different way and is not comparable.</p></details>
+        <details class="explain"><summary>Down a group</summary><p>Atomic radius increases down a group: Li 152 pm, Na 186 pm, K 227 pm. Each element has an extra shell, so the outer electron is further from the nucleus with more shielding.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 IONISATION -->
+  <section id="p-ie" role="tabpanel" aria-labelledby="tab-ie" hidden>
+    <p class="intro"><b>First ionisation energy</b>: the energy needed to remove one mole of electrons from one mole of gaseous atoms, for example <span class="mono">Na(g) → Na⁺(g) + e⁻</span>. It generally <b>increases</b> across Period 3, with <b>decreases at Al and S</b>. Click a point.</p>
+    <div class="station">
+      <div class="stage">
+        <div class="stage-head"><span class="big" id="ieName">Sodium</span><span class="pill" id="iePill">496 kJ mol⁻¹</span></div>
+        <svg id="ieChart" viewBox="0 0 640 380" role="img" aria-label="First ionisation energy across Period 3"></svg>
+        <div class="row"><label class="check"><input type="checkbox" id="ieP2">Show Period 2 (Li to Ne)</label></div>
+      </div>
+      <div class="controls" aria-live="polite">
+        <div class="ctl"><h2>Electron removed</h2><div class="boxes" id="ieBoxes"></div></div>
+        <p class="mono" id="ieEq"></p>
+        <p class="caption" id="ieWhy"></p>
+        <div class="row"><button class="btn" id="ieDipAl">Why is Al lower than Mg?</button><button class="btn" id="ieDipS">Why is S lower than P?</button></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="sortbar"><h2>Successive ionisation energies</h2><label class="check"><input type="checkbox" id="siHide">Mystery mode</label></div>
+      <div class="chips sm" id="siPick"></div>
+      <svg id="siChart" viewBox="0 0 640 330" role="img" aria-label="Successive ionisation energies of the chosen element, on a log scale"></svg>
+      <div class="chips sm" id="siGuess" hidden></div>
+      <p class="caption" id="siCap"></p>
+    </div>
+  </section>
+
+  <!-- 4 MELTING POINTS -->
+  <section id="p-mp" role="tabpanel" aria-labelledby="tab-mp" hidden>
+    <p class="intro">The melting point depends on the <b>structure</b> and on what must be <b>overcome</b>: metallic bonding (Na, Mg, Al), strong covalent bonds in a macromolecular structure (Si), or weak van der Waals forces between molecules or atoms (P₄, S₈, Cl₂, Ar). Click a bar.</p>
+    <div class="station">
+      <div class="stage">
+        <div class="stage-head"><span class="big" id="mpName">Sodium</span><span class="pill" id="mpPill">371 K</span></div>
+        <svg id="mpChart" viewBox="0 0 640 360" role="img" aria-label="Melting points of the Period 3 elements, coloured by structure"></svg>
+        <div class="legend"><span><i style="background:var(--st-m)"></i>giant metallic</span><span><i style="background:var(--st-c)"></i>macromolecular</span><span><i style="background:var(--st-mol)"></i>simple molecular</span><span><i style="background:var(--st-at)"></i>single atoms</span></div>
+      </div>
+      <div class="controls" aria-live="polite">
+        <svg id="mpStruct" viewBox="0 0 420 300" role="img" aria-label="Structure of the chosen element"></svg>
+        <p class="caption" id="mpWhy"></p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="sortbar"><h2>Rank the simple molecular elements</h2><span class="score" id="rkScore"></span></div>
+      <p class="small">Give each a rank from 1 (highest melting point) to 4 (lowest), then check.</p>
+      <div class="rank" id="rkBox"></div>
+      <div class="row"><button class="btn primary" id="rkCheck">Check</button></div>
+      <p class="caption" id="rkCap"></p>
+    </div>
+  </section>
+
+  <!-- 5 QUIZ -->
+  <section id="p-quiz" role="tabpanel" aria-labelledby="tab-quiz" hidden>
+    <div class="quizbar"><p class="intro">Twelve exam-style questions on periodicity. Every wrong answer is a common mistake, so read the explanations.</p><div class="row"><span class="score" id="score">0 / 12</span><button class="btn" id="quizReset">Start again</button></div></div>
+    <div class="quiz" id="quiz"></div>
+  </section>
+
+  <footer>Data: first ionisation energies (kJ mol⁻¹) Na 496, Mg 738, Al 578, Si 787, P 1012, S 1000, Cl 1251, Ar 1521. Melting points (K) Na 371, Mg 923, Al 933, Si 1687, P (white) 317, S (rhombic) 388, Cl 172, Ar 84. Atomic radii (pm): metallic radius for Na, Mg and Al; covalent radius for Si to Cl. Values differ slightly between data books; the trends are what matter. Electron configurations are shown in full up to krypton (Z = 36), as required for this specification.</footer>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent, text){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); if(text!=null) e.textContent=text; if(parent) parent.appendChild(e); return e; }
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function setPressed(host,btn){ host.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b===btn)); }
+const SUP={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','+':'⁺','-':'⁻'};
+const sup=s=>String(s).split('').map(c=>SUP[c]||c).join('');
+
+/* ---------- tabs ---------- */
+const TABS=['blocks','radius','ie','mp','quiz'];
+function showTab(id){ TABS.forEach(t=>{ const on=t===id, b=$('#tab-'+t); b.setAttribute('aria-selected',on); b.tabIndex=on?0:-1; $('#p-'+t).hidden=!on; }); }
+TABS.forEach((t,i)=>{ const b=$('#tab-'+t); b.addEventListener('click',()=>showTab(t));
+  b.addEventListener('keydown',e=>{ if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft') return; const n=TABS[(i+(e.key==='ArrowRight'?1:TABS.length-1))%TABS.length]; showTab(n); $('#tab-'+n).focus(); }); });
+
+/* ---------- elements ---------- */
+const SYM='H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og'.split(' ');
+const NAME='hydrogen helium lithium beryllium boron carbon nitrogen oxygen fluorine neon sodium magnesium aluminium silicon phosphorus sulfur chlorine argon potassium calcium scandium titanium vanadium chromium manganese iron cobalt nickel copper zinc gallium germanium arsenic selenium bromine krypton rubidium strontium yttrium zirconium niobium molybdenum technetium ruthenium rhodium palladium silver cadmium indium tin antimony tellurium iodine xenon caesium barium lanthanum cerium praseodymium neodymium promethium samarium europium gadolinium terbium dysprosium holmium erbium thulium ytterbium lutetium hafnium tantalum tungsten rhenium osmium iridium platinum gold mercury thallium lead bismuth polonium astatine radon francium radium actinium thorium protactinium uranium neptunium plutonium americium curium berkelium californium einsteinium fermium mendelevium nobelium lawrencium rutherfordium dubnium seaborgium bohrium hassium meitnerium darmstadtium roentgenium copernicium nihonium flerovium moscovium livermorium tennessine oganesson'.split(' ');
+const cap=s=>s[0].toUpperCase()+s.slice(1);
+function place(z){ // {period, group (1-18) or null for f rows, frow (0/1) and fcol}
+  const starts=[1,3,11,19,37,55,87], p=starts.filter(s=>z>=s).length, i=z-starts[p-1];
+  if(p===1) return {p,g:z===1?1:18};
+  if(p<=3) return {p,g:i<2?i+1:i+11};
+  if(p<=5) return {p,g:i+1};
+  if(i<2) return {p,g:i+1};
+  if(i<17) return {p,g:null,frow:p-6,fcol:i-2};
+  return {p,g:i-13}; }
+function blockOf(z){ const q=place(z); if(z===2) return 's'; if(q.g===null) return 'f'; if(q.g<=2) return 's'; if(q.g>=13) return 'p'; return 'd'; }
+const ORDER=[['1s',2],['2s',2],['2p',6],['3s',2],['3p',6],['4s',2],['3d',10],['4p',6]];
+function config(z){ let left=z; const fill={}; for(const [o,m] of ORDER){ if(left<=0) break; const k=Math.min(m,left); fill[o]=k; left-=k; }
+  if(z===24){ fill['3d']=5; fill['4s']=1; } if(z===29){ fill['3d']=10; fill['4s']=1; }
+  const shellOrder=['1s','2s','2p','3s','3p','3d','4s','4p'].filter(o=>fill[o]);
+  const full=shellOrder.map(o=>o+sup(fill[o])).join(' ');
+  const cores=[[36,'[Kr]',8],[18,'[Ar]',5],[10,'[Ne]',3],[2,'[He]',1]], core=cores.find(c=>z>c[0]);
+  let short=full; if(core){ const rest=shellOrder.slice(core[2]).map(o=>o+sup(fill[o])).join(' '); short=`${core[1]} ${rest}`; }
+  let last=null; for(const [o] of ORDER) if(fill[o]) last=o; if(z===24||z===29) last='3d';
+  return {full,short,last}; }
+function outerSub(z){ const q=place(z), b=blockOf(z); if(z<=36) return config(z).last; return b==='s'?`${q.p}s`:b==='p'?`${q.p}p`:b==='d'?`${q.p-1}d`:`${q.p-2}f`; }
+const BCOL={s:'var(--b-s)',p:'var(--b-p)',d:'var(--b-d)',f:'var(--b-f)'};
+
+/* ================= STATION 1: blocks ================= */
+const CW=40, GP=2, X0=2, Y0=22;
+function cellXY(z){ const q=place(z); if(q.g===null) return {x:X0+(q.fcol+2)*(CW+GP), y:Y0+7*(CW+GP)+18+q.frow*(CW+GP)}; return {x:X0+(q.g-1)*(CW+GP), y:Y0+(q.p-1)*(CW+GP)}; }
+let SEL=11;
+function ptDraw(){ const svg=$('#ptSvg'); svg.innerHTML='';
+  for(let g=1;g<=18;g++) el('text',{x:X0+(g-1)*(CW+GP)+CW/2,y:14,'text-anchor':'middle',class:'s-mut','font-size':10},svg,g);
+  el('rect',{x:X0-2,y:Y0+2*(CW+GP)-2,width:18*(CW+GP)+2,height:CW+4,rx:6,fill:'none',stroke:'var(--ink)','stroke-width':1.5,'stroke-dasharray':'5 4'},svg);
+  [[6,'57–71'],[7,'89–103']].forEach(([p,t])=>{ const x=X0+2*(CW+GP), y=Y0+(p-1)*(CW+GP); el('rect',{x,y,width:CW,height:CW,rx:4,fill:'var(--b-f)',opacity:.18},svg); el('text',{x:x+CW/2,y:y+CW/2+4,'text-anchor':'middle',class:'s-mut','font-size':8.5},svg,t); });
+  for(let z=1;z<=118;z++){ const {x,y}=cellXY(z), b=blockOf(z), g=el('g',{class:'pt-cell',tabindex:0,role:'button','aria-label':`${cap(NAME[z-1])}, ${b} block`},svg);
+    el('rect',{x,y,width:CW,height:CW,rx:4,fill:BCOL[b],opacity:z===SEL?1:.78,stroke:z===SEL?'var(--ink)':'none','stroke-width':z===SEL?2.5:0},g);
+    el('text',{x:x+3,y:y+10,class:'s-onfill','font-size':8.5,'font-weight':400},g,z);
+    el('text',{x:x+CW/2,y:y+29,'text-anchor':'middle',class:'s-onfill','font-size':15},g,SYM[z-1]);
+    g.addEventListener('click',()=>ptPick(z)); g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); ptPick(z); } }); }
+  el('text',{x:X0,y:Y0+7*(CW+GP)+12,class:'s-mut','font-size':10},svg,'f block: lanthanides (57–71) and actinides (89–103)'); }
+function ptPick(z){ SEL=z; ptDraw(); const q=place(z), b=blockOf(z), sub=outerSub(z), nm=cap(NAME[z-1]);
+  $('#elName').textContent=`${nm} (${SYM[z-1]})`; $('#elBlock').textContent=`${b} block`;
+  $('#elMeta').textContent=`Proton number ${z} · Period ${q.p} · ${q.g===null?(q.p===6?'lanthanide':'actinide'):'Group '+q.g}`;
+  if(z<=36){ const c=config(z); $('#elCfg').textContent=c.full+(c.short!==c.full?`   (${c.short})`:''); }
+  else $('#elCfg').textContent=`Sub-shell being filled: ${sub}`;
+  let why=`${b} block: the highest-energy electron is in the ${sub} sub-shell.`;
+  if(z===2) why='Helium is 1s², so its electrons are in an s sub-shell: it is an s-block element. It is placed in Group 18 because its shell is full and it is unreactive, like the other noble gases.';
+  if(z===24||z===29) why+=` ${nm} is an exception: one 4s electron moves into 3d, giving ${z===24?'a half-filled':'a full'} 3d sub-shell, which is more stable.`;
+  if(z>36) why+=' Full electron configurations are only needed up to krypton.';
+  $('#elWhy').textContent=why; }
+/* which block practice */
+const WB={z:null,asked:0,right:0,done:false};
+function wbNew(){ let z; do { z=1+Math.floor(Math.random()*86); } while(z===WB.z); WB.z=z; WB.done=false;
+  const useCfg=z<=36&&z>2&&Math.random()<0.5;
+  $('#wbQ').innerHTML=useCfg?`Which block is the element with this electron configuration in?<br><span class="cfg">${config(z).full}</span>`:`Which block is <b>${cap(NAME[z-1])}</b> (Z = ${z}) in?`;
+  $('#wbOpts').innerHTML=['s','p','d','f'].map(b=>`<button class="chip" data-b="${b}">${b} block</button>`).join(''); $('#wbFb').textContent='';
+  $$('#wbOpts button').forEach(btn=>btn.addEventListener('click',()=>{ if(WB.done) return; WB.done=true; WB.asked++; const b=blockOf(WB.z), ok=btn.dataset.b===b; if(ok) WB.right++;
+    btn.classList.add(ok?'ans-right':'ans-wrong'); if(!ok) $(`#wbOpts [data-b="${b}"]`).classList.add('ans-right');
+    $('#wbFb').innerHTML=`<b>${ok?'Correct.':'Not quite.'}</b> ${cap(NAME[WB.z-1])} (Z = ${WB.z}) is ${b} block: its highest-energy electron is in ${outerSub(WB.z)}.`; $('#wbScore').textContent=`${WB.right} / ${WB.asked}`; ptPick(WB.z); })); }
+$('#wbNext').addEventListener('click',wbNew);
+ptDraw(); ptPick(11); wbNew();
+/* ================= Period 3 data ================= */
+const P3=[
+  {s:'Na',n:'sodium',z:11,r:186,ie:496,mp:371,st:'m',c:'--el-na',succ:[496,4562,6910]},
+  {s:'Mg',n:'magnesium',z:12,r:160,ie:738,mp:923,st:'m',c:'--el-mg',succ:[738,1451,7733,10543]},
+  {s:'Al',n:'aluminium',z:13,r:143,ie:578,mp:933,st:'m',c:'--el-al',succ:[578,1817,2745,11577,14842]},
+  {s:'Si',n:'silicon',z:14,r:117,ie:787,mp:1687,st:'c',c:'--el-si',succ:[787,1577,3232,4356,16091,19805]},
+  {s:'P',n:'phosphorus',z:15,r:110,ie:1012,mp:317,st:'mol',c:'--el-p',succ:[1012,1907,2914,4964,6274,21267,25431]},
+  {s:'S',n:'sulfur',z:16,r:104,ie:1000,mp:388,st:'mol',c:'--el-s',succ:[1000,2252,3357,4556,7004,8496,27107,31719]},
+  {s:'Cl',n:'chlorine',z:17,r:99,ie:1251,mp:172,st:'mol',c:'--el-cl',succ:[1251,2298,3822,5159,6542,9362,11018,33604,38600]},
+  {s:'Ar',n:'argon',z:18,r:null,ie:1521,mp:84,st:'at',c:'--el-ar',succ:[1521,2666,3931,5771,7238,8781,11995,13842,40760]}];
+const P2=[['Li',520],['Be',900],['B',801],['C',1087],['N',1402],['O',1314],['F',1681],['Ne',2081]];
+function barChart(svg,o){ svg.innerHTML=''; const {W,H,x0,y0,y1,max,step,unit,items,sel,onPick}=o, bw=(W-x0-20)/items.length, y=v=>y0-(v/max)*(y0-y1);
+  for(let v=0;v<=max;v+=step){ el('line',{x1:x0,y1:y(v),x2:W-10,y2:y(v),stroke:'var(--line)'},svg); el('text',{x:x0-8,y:y(v)+4,'text-anchor':'end',class:'s-mut'},svg,v); }
+  el('text',{x:16,y:(y0+y1)/2,'text-anchor':'middle',class:'s-mut',transform:`rotate(-90 16 ${(y0+y1)/2})`},svg,unit);
+  items.forEach((it,i)=>{ const x=x0+i*bw+bw*0.15, w=bw*0.7, g=el('g',{class:'pt-cell',tabindex:0,role:'button','aria-label':`${it.label}: ${it.v==null?'no comparable value':it.v+' '+o.u}`},svg);
+    if(it.v==null){ el('rect',{x,y:y(max*0.12),width:w,height:y0-y(max*0.12),fill:'none',stroke:'var(--muted)','stroke-dasharray':'4 3',rx:3},g); el('text',{x:x+w/2,y:y(max*0.12)-6,'text-anchor':'middle',class:'s-mut'},g,'n/a'); }
+    else { el('rect',{x,y:y(it.v),width:w,height:y0-y(it.v),rx:3,fill:it.col||'var(--muted)',opacity:i===sel?1:0.45},g); el('text',{x:x+w/2,y:y(it.v)-6,'text-anchor':'middle',class:'s-txt','font-weight':i===sel?700:400},g,it.v); }
+    el('text',{x:x+w/2,y:y0+18,'text-anchor':'middle',class:'s-txt','font-weight':700},g,it.label);
+    if(onPick){ g.addEventListener('click',()=>onPick(i)); g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); onPick(i); } }); } });
+  el('line',{x1:x0,y1:y0,x2:W-10,y2:y0,stroke:'var(--ink)','stroke-width':1.5},svg); }
+
+/* ================= STATION 2: atomic radius ================= */
+let AR=0;
+function arDraw(){ const e=P3[AR], svg=$('#arAtom'); svg.innerHTML=''; const cx=260, cy=210, rad=e.r??95, r3=118+(rad-99)/(186-99)*68, nOut=e.z-10, col=`var(${e.c})`;
+  el('circle',{cx,cy,r:76,fill:'var(--surface-2)',stroke:'none'},svg);
+  [[50,2],[76,8]].forEach(([r,n])=>{ el('circle',{cx,cy,r,fill:'none',stroke:'var(--line)','stroke-width':1.5},svg); for(let i=0;i<n;i++){ const a=i/n*6.283+0.4; el('circle',{cx:cx+r*Math.cos(a),cy:cy+r*Math.sin(a),r:5,fill:'var(--muted)'},svg); } });
+  el('circle',{cx,cy,r:r3,fill:'none',stroke:col,'stroke-width':2.5,'stroke-dasharray':e.r?'':'6 5'},svg);
+  for(let i=0;i<nOut;i++){ const a=-1.571+i/nOut*6.283; el('circle',{cx:cx+r3*Math.cos(a),cy:cy+r3*Math.sin(a),r:7,fill:col,stroke:'var(--ink)','stroke-width':.8},svg); }
+  el('circle',{cx,cy,r:28,fill:'var(--st-c)'},svg); el('text',{x:cx,y:cy+6,'text-anchor':'middle',class:'s-onfill','font-size':17},svg,'+'+e.z);
+  if(e.r){ el('line',{x1:cx+28,y1:cy,x2:cx+r3,y2:cy,stroke:'var(--ink)','stroke-width':1.5},svg); el('path',{d:`M${cx+r3} ${cy} l-9 -5 v10z`,fill:'var(--ink)'},svg); el('text',{x:cx+r3/2+20,y:cy-8,'text-anchor':'middle',class:'s-txt','font-weight':700},svg,`${e.r} pm`); }
+  el('text',{x:16,y:416,class:'s-head'},svg,`${e.s}: nuclear charge +${e.z}`); el('text',{x:16,y:434,class:'s-mut'},svg,`${nOut} electron${nOut>1?'s':''} in the third shell`); el('text',{x:16,y:451,class:'s-mut'},svg,'10 inner electrons (grey) shield them');
+  $('#arName').textContent=cap(e.n); $('#arPill').textContent=e.r?`${e.r} pm`:'no comparable value';
+  $('#arRead').innerHTML=[['PROTONS',e.z],['INNER ELECTRONS',10],['OUTER ELECTRONS',nOut]].map(([l,v])=>`<div class="result"><span class="rl">${l}</span><span class="rv">${v}</span></div>`).join('');
+  $('#arCap').textContent=AR===0?'Sodium: 11 protons and one electron in the third shell. The 10 inner electrons shield it, so it is held weakly and the atom is the largest in Period 3.'
+    :e.r?`${cap(e.n)}: ${e.z} protons, ${e.z-11} more than sodium, but the outer electrons are still in the third shell with about the same shielding from 10 inner electrons. The greater nuclear charge pulls them closer: ${e.r} pm.`
+    :'Argon does not form bonds, so it has no covalent radius to compare. If it did, the trend suggests it would be the smallest atom in Period 3.';
+  barChart($('#arChart'),{W:520,H:300,x0:52,y0:250,y1:24,max:200,step:50,unit:'Atomic radius (pm)',u:'pm',items:P3.map(p=>({label:p.s,v:p.r,col:`var(${p.c})`})),sel:AR,onPick:i=>{ AR=i; arSync(); }}); }
+function arSync(){ setPressed($('#arPick'),$('#arPick').children[AR]); arDraw(); }
+$('#arPick').innerHTML=P3.map((p,i)=>`<button class="chip" aria-pressed="${i===AR}">${p.s}</button>`).join('');
+$$('#arPick button').forEach((b,i)=>b.addEventListener('click',()=>{ AR=i; arSync(); }));
+arDraw();
+/* ================= STATION 3: ionisation energies ================= */
+let IE=0;
+const IEWHY=['The 3s electron is removed. It is shielded by 10 inner electrons and is far from the nucleus, so this is the lowest first ionisation energy in Period 3.',
+  'Higher than sodium: one more proton, and the electron is removed from the same 3s sub-shell with similar shielding, so it is held more strongly.',
+  'Lower than magnesium: the electron removed is in the 3p sub-shell, which is higher in energy than 3s. It is slightly further from the nucleus and partly shielded by the 3s electrons.',
+  'Higher than aluminium: one more proton, and the electron is removed from the same 3p sub-shell.',
+  'Higher than silicon: one more proton. The three 3p electrons are each alone in their own orbital.',
+  'Lower than phosphorus: the electron removed comes from a 3p orbital that already holds another electron. Repulsion between the paired electrons makes it easier to remove.',
+  'Higher than sulfur: one more proton, and the electron is removed from the same 3p sub-shell.',
+  'The highest in Period 3: the largest nuclear charge, with the outer electrons in the same shell and similar shielding.'];
+const gOf=z=>{ const o=z-10; return o<=2?o:o+10; };
+function boxesHTML(z,label){ const nOut=z-10, s=Math.min(2,nOut), p=Math.max(0,nOut-2), pb=[0,0,0];
+  for(let i=0;i<p;i++) pb[i<3?i:i-3]++;
+  const lastP=p>0?(p<=3?p-1:p-4):-1; // index of the box holding the highest-energy electron
+  const arrows=(n,hit)=>n===0?'':n===1?`<span class="${hit?'hit':''}">↑</span>`:`<span>↑</span><span class="${hit?'hit':''}">↓</span>`;
+  const sBox=`<div class="orb"><div class="row1"><div class="bx">${arrows(s,p===0)}</div></div>3s</div>`;
+  const pBox=`<div class="orb"><div class="row1">${pb.map((n,i)=>`<div class="bx">${arrows(n,i===lastP)}</div>`).join('')}</div>3p</div>`;
+  return `<div class="orb"><div class="row1"><div class="bx" style="width:auto;padding:0 6px;font-size:.9rem">[Ne]</div></div>${label||'&nbsp;'}</div>${sBox}${pBox}`; }
+function ieChart(){ const svg=$('#ieChart'); svg.innerHTML=''; const x0=70, x1=620, y0=330, y1=24, max=2200, xs=i=>x0+(i+0.5)*(x1-x0)/8, y=v=>y0-v/max*(y0-y1), p2=$('#ieP2').checked;
+  for(let v=0;v<=max;v+=400){ el('line',{x1:x0,y1:y(v),x2:x1,y2:y(v),stroke:'var(--line)'},svg); el('text',{x:x0-8,y:y(v)+4,'text-anchor':'end',class:'s-mut'},svg,v); }
+  el('text',{x:16,y:(y0+y1)/2,'text-anchor':'middle',class:'s-mut',transform:`rotate(-90 16 ${(y0+y1)/2})`},svg,'First IE (kJ mol⁻¹)');
+  el('line',{x1:x0,y1:y0,x2:x1,y2:y0,stroke:'var(--ink)','stroke-width':1.5},svg);
+  ['Group 1','2','13','14','15','16','17','18'].forEach((g,i)=>el('text',{x:xs(i),y:y0+36,'text-anchor':'middle',class:'s-mut'},svg,g));
+  if(p2){ el('path',{d:P2.map((p,i)=>`${i?'L':'M'}${xs(i)} ${y(p[1])}`).join(' '),fill:'none',stroke:'var(--muted)','stroke-width':2,'stroke-dasharray':'6 4'},svg);
+    P2.forEach((p,i)=>{ el('circle',{cx:xs(i),cy:y(p[1]),r:5,fill:'var(--surface)',stroke:'var(--muted)','stroke-width':2},svg); el('text',{x:xs(i)+9,y:y(p[1])-8,class:'s-mut'},svg,p[0]); }); }
+  el('path',{d:P3.map((p,i)=>`${i?'L':'M'}${xs(i)} ${y(p.ie)}`).join(' '),fill:'none',stroke:'var(--xa)','stroke-width':3},svg);
+  P3.forEach((p,i)=>{ const g=el('g',{class:'pt-cell',tabindex:0,role:'button','aria-label':`${p.n}: ${p.ie} kilojoules per mole`},svg);
+    el('circle',{cx:xs(i),cy:y(p.ie),r:i===IE?10:7,fill:i===IE?'var(--xa)':'var(--surface)',stroke:'var(--xa)','stroke-width':3},g);
+    el('text',{x:xs(i),y:y0+18,'text-anchor':'middle',class:'s-txt','font-weight':700},g,p.s);
+    if(i===IE) el('text',{x:xs(i),y:y(p.ie)-16,'text-anchor':'middle',class:'s-txt','font-weight':700},g,p.ie);
+    g.addEventListener('click',()=>iePick(i)); g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); iePick(i); } }); });
+  [[2,'Al'],[5,'S']].forEach(([i])=>{ el('circle',{cx:xs(i),cy:y(P3[i].ie),r:15,fill:'none',stroke:'var(--bad)','stroke-width':1.5,'stroke-dasharray':'3 3'},svg); }); }
+function iePick(i,cmp){ IE=i; const p=P3[i]; ieChart(); $('#ieName').textContent=cap(p.n); $('#iePill').textContent=`${p.ie} kJ mol⁻¹`;
+  $('#ieEq').textContent=`${p.s}(g) → ${p.s}⁺(g) + e⁻    first IE = +${p.ie} kJ mol⁻¹`;
+  if(cmp){ const a=P3[cmp[0]], b=P3[cmp[1]]; $('#ieBoxes').innerHTML=`<div style="display:grid;gap:10px"><div class="boxes">${boxesHTML(a.z,a.s)}</div><div class="boxes">${boxesHTML(b.z,b.s)}</div></div>`; $('#ieWhy').innerHTML=cmp[2]; }
+  else { $('#ieBoxes').innerHTML=`<div class="boxes">${boxesHTML(p.z,p.s)}</div>`; $('#ieWhy').textContent=IEWHY[i]+' The electron removed is shown in red.'; } }
+$('#ieP2').addEventListener('change',()=>{ ieChart(); if($('#ieP2').checked) $('#ieWhy').textContent='Period 2 shows the same pattern, with decreases at B (Group 13) and O (Group 16). Every Period 2 value is higher than the Period 3 element in the same group: the outer electrons are in the second shell, closer to the nucleus with less shielding.'; });
+$('#ieDipAl').addEventListener('click',()=>iePick(2,[1,2,'<b>Mg (738) → Al (578):</b> magnesium loses a 3s electron; aluminium loses a 3p electron. The 3p sub-shell is higher in energy, slightly further from the nucleus and partly shielded by the 3s electrons, so less energy is needed, despite the extra proton.']));
+$('#ieDipS').addEventListener('click',()=>iePick(5,[4,5,'<b>P (1012) → S (1000):</b> in phosphorus each 3p electron is alone in an orbital. In sulfur the electron removed is from a 3p orbital holding a pair. The two paired electrons repel, so one is easier to remove, despite the extra proton.']));
+iePick(0);
+
+/* successive ionisation energies */
+const SI={i:2,hide:false,answered:false};
+function siDraw(){ const svg=$('#siChart'); svg.innerHTML=''; const p=P3[SI.i], v=p.succ, x0=76, x1=620, y0=280, y1=20, lo=2, hi=5, y=e=>y0-(Math.log10(e)-lo)/(hi-lo)*(y0-y1), bw=(x1-x0)/v.length;
+  [100,1000,10000,100000].forEach(t=>{ el('line',{x1:x0,y1:y(t),x2:x1,y2:y(t),stroke:'var(--line)'},svg); el('text',{x:x0-8,y:y(t)+4,'text-anchor':'end',class:'s-mut'},svg,t.toLocaleString('en-GB')); });
+  el('text',{x:16,y:(y0+y1)/2,'text-anchor':'middle',class:'s-mut',transform:`rotate(-90 16 ${(y0+y1)/2})`},svg,'IE (kJ mol⁻¹, log scale)');
+  let jump=1, best=0; for(let k=1;k<v.length;k++){ const r=v[k]/v[k-1]; if(r>best){ best=r; jump=k; } }
+  v.forEach((e,k)=>{ const x=x0+k*bw+bw*0.18, w=bw*0.64; el('rect',{x,y:y(e),width:w,height:y0-y(e),rx:3,fill:k<jump?'var(--xa)':'var(--muted)',opacity:k<jump?0.9:0.55},svg);
+    el('text',{x:x+w/2,y:y(e)-6,'text-anchor':'middle',class:'s-mut','font-size':11},svg,e.toLocaleString('en-GB')); el('text',{x:x+w/2,y:y0+18,'text-anchor':'middle',class:'s-txt'},svg,['1st','2nd','3rd'][k]||`${k+1}th`); });
+  const xj=x0+jump*bw; el('line',{x1:xj,y1:y1,x2:xj,y2:y0,stroke:'var(--bad)','stroke-width':2,'stroke-dasharray':'5 4'},svg); el('text',{x:xj+6,y:y1+14,class:'s-txt',fill:'var(--bad)','font-weight':700},svg,'big jump');
+  el('line',{x1:x0,y1:y0,x2:x1,y2:y0,stroke:'var(--ink)','stroke-width':1.5},svg);
+  const outer=jump, nm=SI.hide&&!SI.answered?'Mystery element':cap(p.n);
+  $('#siCap').innerHTML=SI.hide&&!SI.answered?`The ${['','1st','2nd','3rd'][jump]||jump+'th'} ionisation energies are all quite low, then there is a big jump. Which group is this Period 3 element in?`
+    :`<b>${nm}:</b> the big jump is between the ${['','1st','2nd','3rd'][outer]||outer+'th'} and ${['','1st','2nd','3rd'][outer+1]||(outer+1)+'th'} ionisation energies. The next electron is removed from the second shell, which is closer to the nucleus and less shielded. So there ${outer>1?'are':'is'} ${outer} electron${outer>1?'s':''} in the outer shell: Group ${gOf(p.z)}.${outer>1?' The values also rise steadily before the jump, because each electron is removed from an increasingly positive ion.':''}`; }
+function siPick(i){ SI.i=i; SI.answered=false; setPressed($('#siPick'),$('#siPick').children[i]); siDraw(); siGuessRender(); }
+function siGuessRender(){ const host=$('#siGuess'); host.hidden=!SI.hide; if(!SI.hide) return;
+  host.innerHTML=[1,2,13,14,15,16,17,18].map(g=>`<button class="chip" data-g="${g}">Group ${g}</button>`).join('');
+  host.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ if(SI.answered) return; const want=gOf(P3[SI.i].z), ok=+b.dataset.g===want; b.classList.add(ok?'ans-right':'ans-wrong'); if(!ok) host.querySelector(`[data-g="${want}"]`).classList.add('ans-right'); SI.answered=true; siDraw(); })); }
+$('#siPick').innerHTML=P3.map((p,i)=>`<button class="chip" aria-pressed="${i===SI.i}">${p.s}</button>`).join('');
+$$('#siPick button').forEach((b,i)=>b.addEventListener('click',()=>siPick(i)));
+$('#siHide').addEventListener('change',()=>{ SI.hide=$('#siHide').checked; $('#siPick').hidden=SI.hide; if(SI.hide) siPick(Math.floor(Math.random()*8)); else siPick(SI.i); });
+siPick(2);
+/* ================= STATION 4: melting points ================= */
+let MP=0;
+const STCOL={m:'var(--st-m)',c:'var(--st-c)',mol:'var(--st-mol)',at:'var(--st-at)'};
+const MPWHY=['<b>Giant metallic lattice</b> of Na⁺ ions in a sea of delocalised electrons, one per atom. Metallic bonding must be overcome.',
+  '<b>Giant metallic lattice.</b> Mg²⁺ ions are smaller with a bigger charge, and each atom gives two delocalised electrons, so the metallic bonding is stronger than in sodium.',
+  '<b>Giant metallic lattice.</b> Al³⁺ ions are smaller still, with a 3+ charge and three delocalised electrons per atom: the strongest metallic bonding of the three.',
+  '<b>Macromolecular</b> (giant covalent): each Si atom is covalently bonded to four others. Many strong covalent bonds must be broken, so silicon has the highest melting point.',
+  '<b>Simple molecular P₄.</b> Only weak van der Waals forces between molecules are overcome. The covalent P–P bonds inside each molecule do not break.',
+  '<b>Simple molecular S₈.</b> S₈ molecules are bigger, with more electrons (128) than P₄ (60) or Cl₂ (34), so the van der Waals forces between them are stronger.',
+  '<b>Simple molecular Cl₂.</b> Small molecules with 34 electrons, so the van der Waals forces between them are weak.',
+  '<b>Single atoms.</b> Argon atoms have only 18 electrons, so the van der Waals forces between them are the weakest in Period 3.'];
+function rng(seed){ let a=seed>>>0; return ()=>{ a=(a+0x6D2B79F5)>>>0; let t=a; t=Math.imul(t^(t>>>15),t|1); t^=t+Math.imul(t^(t>>>7),t|61); return ((t^(t>>>14))>>>0)/4294967296; }; }
+function atom(svg,x,y,r,col,label,fs){ el('circle',{cx:x,cy:y,r,fill:col,stroke:'var(--ink)','stroke-width':.8},svg); if(label) el('text',{x,y:y+(fs||11)*0.36,'text-anchor':'middle',class:'s-onfill','font-size':fs||11},svg,label); }
+function mpStruct(){ const svg=$('#mpStruct'); svg.innerHTML=''; const e=P3[MP], col=`var(${e.c})`, R=rng(7+MP);
+  if(e.st==='m'){ const q=MP+1, r=[21,18,15][MP]; for(let k=0;k<q*10;k++) el('text',{x:20+R()*380,y:40+R()*240,class:'s-mut','font-size':11},svg,'e⁻');
+    for(let j=0;j<3;j++) for(let i=0;i<5;i++) atom(svg,62+i*74,72+j*78,r,col,`${e.s}${sup(q>1?q+'+':'+')}`,12);
+    el('text',{x:210,y:292,'text-anchor':'middle',class:'s-mut'},svg,`${q} delocalised electron${q>1?'s':''} per atom`); }
+  else if(e.st==='c'){ const P=(i,j)=>[60+i*75,60+j*62];
+    for(let j=0;j<4;j++) for(let i=0;i<5;i++){ const [x,y]=P(i,j); if(i<4){ const [x2,y2]=P(i+1,j); el('line',{x1:x,y1:y,x2,y2,stroke:'var(--ink)','stroke-width':2.5},svg); } if(j<3){ const [x2,y2]=P(i,j+1); el('line',{x1:x,y1:y,x2,y2,stroke:'var(--ink)','stroke-width':2.5},svg); } }
+    for(let j=0;j<4;j++) for(let i=0;i<5;i++){ const [x,y]=P(i,j); atom(svg,x,y,15,col,'Si',11); }
+    el('text',{x:210,y:292,'text-anchor':'middle',class:'s-mut'},svg,'each Si bonded to four others (tetrahedral in 3D)'); }
+  else if(MP===4){ [[90,110],[300,90],[200,220]].forEach(([cx,cy])=>{ const pts=[[cx,cy-34],[cx-34,cy+20],[cx+34,cy+20],[cx+6,cy+4]];
+      [[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]].forEach(([a,b])=>el('line',{x1:pts[a][0],y1:pts[a][1],x2:pts[b][0],y2:pts[b][1],stroke:'var(--ink)','stroke-width':2},svg)); pts.forEach(([x,y])=>atom(svg,x,y,11,col,'P',10)); });
+    vdw(svg,[[124,124,262,104],[118,150,178,200],[290,124,236,196]]); el('text',{x:210,y:292,'text-anchor':'middle',class:'s-mut'},svg,'P₄ molecules · dashed: van der Waals forces'); }
+  else if(MP===5){ [[110,105],[305,185]].forEach(([cx,cy])=>{ const pts=[]; for(let k=0;k<8;k++){ const a=k/8*6.283+0.39; pts.push([cx+(k%2?44:56)*Math.cos(a),cy+(k%2?44:56)*Math.sin(a)]); }
+      pts.forEach((p,k)=>{ const q=pts[(k+1)%8]; el('line',{x1:p[0],y1:p[1],x2:q[0],y2:q[1],stroke:'var(--ink)','stroke-width':2},svg); }); pts.forEach(([x,y])=>atom(svg,x,y,11,col,'S',10)); });
+    vdw(svg,[[170,130,248,170]]); el('text',{x:210,y:292,'text-anchor':'middle',class:'s-mut'},svg,'S₈ rings · dashed: van der Waals forces'); }
+  else if(MP===6){ [[70,70],[220,60],[350,100],[120,170],[290,190],[190,238]].forEach(([x,y],k)=>{ const a=k*0.9; const dx=16*Math.cos(a), dy=16*Math.sin(a); el('line',{x1:x-dx,y1:y-dy,x2:x+dx,y2:y+dy,stroke:'var(--ink)','stroke-width':2.5},svg); atom(svg,x-dx,y-dy,13,col,'Cl',9); atom(svg,x+dx,y+dy,13,col,'Cl',9); });
+    vdw(svg,[[90,90,200,70],[140,165,270,185],[240,80,330,100]]); el('text',{x:210,y:292,'text-anchor':'middle',class:'s-mut'},svg,'Cl₂ molecules · dashed: van der Waals forces'); }
+  else { [[70,70],[200,50],[340,90],[110,170],[250,150],[370,210],[60,250],[200,240]].forEach(([x,y])=>atom(svg,x,y,15,col,'Ar',10));
+    vdw(svg,[[85,85,185,60],[125,160,235,150],[265,165,355,200]]); el('text',{x:210,y:292,'text-anchor':'middle',class:'s-mut'},svg,'single argon atoms · dashed: van der Waals forces'); } }
+function vdw(svg,lines){ lines.forEach(([a,b,c,d])=>el('line',{x1:a,y1:b,x2:c,y2:d,stroke:'var(--muted)','stroke-width':1.5,'stroke-dasharray':'4 4'},svg)); }
+function mpPick(i){ MP=i; const e=P3[i]; $('#mpName').textContent=cap(e.n); $('#mpPill').textContent=`${e.mp} K`; $('#mpWhy').innerHTML=`${MPWHY[i]} Melting point: <b>${e.mp} K</b>.`; mpStruct();
+  barChart($('#mpChart'),{W:640,H:360,x0:64,y0:310,y1:24,max:1800,step:300,unit:'Melting point (K)',u:'K',items:P3.map(p=>({label:p.s,v:p.mp,col:STCOL[p.st]})),sel:MP,onPick:mpPick}); }
+mpPick(0);
+/* rank the simple molecular elements */
+const RK=[['P₄',2],['S₈',1],['Cl₂',3],['Ar',4]];
+$('#rkBox').innerHTML=RK.map(([n],i)=>`<label>${n}<select class="num" data-i="${i}" aria-label="Rank for ${n}"><option value="">–</option><option>1</option><option>2</option><option>3</option><option>4</option></select></label>`).join('');
+$('#rkCheck').addEventListener('click',()=>{ const v=$$('#rkBox select').map(s=>+s.value||0), ok=v.filter((x,i)=>x===RK[i][1]).length;
+  $('#rkScore').textContent=`${ok} / 4`;
+  $('#rkCap').innerHTML=ok===4?'<b>Correct: S₈ > P₄ > Cl₂ > Ar.</b> All four are held together by van der Waals forces. More electrons (S₈ 128, P₄ 60, Cl₂ 34, Ar 18) and a bigger surface area mean stronger van der Waals forces and a higher melting point.'
+    :'<b>Not yet.</b> Count the electrons in each molecule: S₈ has 8 × 16 = 128, P₄ has 4 × 15 = 60, Cl₂ has 2 × 17 = 34 and Ar has 18. More electrons means stronger van der Waals forces.'; });
+/* ================= STATION 5: quiz ================= */
+const QUIZ=[
+  {q:'What decides that an element is in the p block?',o:['Its highest-energy electron is in a p sub-shell','It has some electrons in a p sub-shell','It is in Period 2 or a later period','It has a full d sub-shell'],a:0,e:'Calcium has p electrons too (2p and 3p), but its highest-energy electrons are 4s, so it is s block. The block is set by the sub-shell the highest-energy electron goes into.'},
+  {q:'Which element is in the f block?',o:['Uranium','Zirconium','Tellurium','Barium'],a:0,e:'Uranium is an actinide (f block). Zirconium is d block, tellurium p block and barium s block.'},
+  {q:'What is the trend in atomic radius from sodium to chlorine?',o:['It decreases, because the nuclear charge increases while shielding stays about the same','It increases, because more electrons are added','It decreases, because there are fewer shells','It stays the same, because all the atoms have three shells'],a:0,e:'Each element adds a proton and an electron in the same shell. The inner 10 electrons shield about the same, so the outer electrons are pulled closer.'},
+  {q:'Which equation represents the first ionisation energy of sodium?',o:['Na(g) → Na⁺(g) + e⁻','Na(s) → Na⁺(g) + e⁻','Na(g) + e⁻ → Na⁻(g)','Na(s) → Na⁺(aq) + e⁻'],a:0,e:'Ionisation energies are defined for gaseous atoms forming gaseous ions. Adding an electron is electron affinity, not ionisation.'},
+  {q:'Why is the first ionisation energy of aluminium lower than that of magnesium?',o:['The electron removed from Al is in a 3p sub-shell, higher in energy and partly shielded by the 3s electrons','Aluminium has more protons than magnesium','The electron removed from Al comes from a paired orbital','Aluminium has an extra electron shell'],a:0,e:'Al has more protons, which on its own would raise the IE. The drop happens because the 3p electron is higher in energy than 3s. The paired-orbital idea explains S, not Al.'},
+  {q:'Why is the first ionisation energy of sulfur lower than that of phosphorus?',o:['The electron is removed from a 3p orbital holding a pair of electrons, which repel','Sulfur has fewer protons than phosphorus','The electron removed from sulfur is in the 3s sub-shell','Sulfur has an extra shell of electrons'],a:0,e:'P is 3s² 3p³ with three unpaired 3p electrons. S is 3s² 3p⁴, so one 3p orbital holds a pair; the repulsion makes one of them easier to remove.'},
+  {q:'The successive ionisation energies of a Period 3 element are 578, 1817, 2745 and 11 577 kJ mol⁻¹. Which group is it in?',o:['Group 13','Group 2','Group 14','Group 3'],a:0,e:'The big jump is between the 3rd and 4th: three electrons in the outer shell, so Group 13 (aluminium).'},
+  {q:'Which Period 3 element has the highest first ionisation energy?',o:['Argon','Chlorine','Sodium','Phosphorus'],a:0,e:'Argon has the largest nuclear charge in Period 3, with the outer electrons in the same shell and similar shielding.'},
+  {q:'Why does silicon have the highest melting point in Period 3?',o:['Many strong covalent bonds must be broken in its macromolecular structure','It has the strongest metallic bonding','Its van der Waals forces are the strongest','It has the most protons'],a:0,e:'Silicon is macromolecular: each atom is covalently bonded to four others, and melting breaks these strong bonds.'},
+  {q:'Why is the melting point of aluminium higher than that of sodium?',o:['Al³⁺ ions are smaller with a bigger charge, and there are more delocalised electrons per atom','Aluminium has covalent bonds','Aluminium atoms are bigger','Aluminium has stronger van der Waals forces'],a:0,e:'Both are metallic. Stronger attraction between smaller, more highly charged ions and more delocalised electrons means stronger metallic bonding.'},
+  {q:'Which order of melting points is correct, highest first?',o:['S₈ > P₄ > Cl₂ > Ar','P₄ > S₈ > Cl₂ > Ar','Cl₂ > S₈ > P₄ > Ar','Ar > Cl₂ > P₄ > S₈'],a:0,e:'All are held by van der Waals forces, which get stronger with more electrons: S₈ 128, P₄ 60, Cl₂ 34, Ar 18.'},
+  {q:'Which is the best explanation of the low melting point of phosphorus?',o:['Only weak van der Waals forces between P₄ molecules are overcome','The covalent P–P bonds are weak and break easily','Phosphorus has metallic bonding with few delocalised electrons','Phosphorus exists as single atoms'],a:0,e:'Melting a simple molecular substance separates the molecules. The covalent bonds inside P₄ do not break.'}
+];
+const QS={ans:{}};
+function shuffleQ(){ QUIZ.forEach(it=>{ it.order=shuffle(it.o.map((_,i)=>i)); }); }
+function renderQuiz(){ const host=$('#quiz'); host.innerHTML='';
+  QUIZ.forEach((it,n)=>{ const d=document.createElement('div'); d.className='q';
+    d.innerHTML=`<span class="qn">Question ${n+1}</span><p class="qt">${it.q}</p><div class="opts"></div><p class="fb" hidden></p>`;
+    const opts=d.querySelector('.opts'), fb=d.querySelector('.fb');
+    it.order.forEach(oi=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=it.o[oi]; b.dataset.i=oi;
+      b.addEventListener('click',()=>{ if(n in QS.ans) return; QS.ans[n]=oi; opts.querySelectorAll('.opt').forEach(x=>{ x.disabled=true; if(+x.dataset.i===it.a) x.classList.add('right'); });
+        if(oi!==it.a) b.classList.add('wrong'); fb.hidden=false; fb.innerHTML=`<b>${oi===it.a?'Correct.':'Not quite.'}</b> ${it.e}`; qScore(); });
+      opts.appendChild(b); });
+    host.appendChild(d); });
+  qScore(); }
+function qScore(){ const r=Object.keys(QS.ans).filter(k=>QS.ans[k]===QUIZ[k].a).length; $('#score').textContent=`${r} / ${QUIZ.length}`; }
+$('#quizReset').addEventListener('click',()=>{ QS.ans={}; shuffleQ(); renderQuiz(); });
+shuffleQ(); renderQuiz();
+(function(){ const h=(location.hash||'').slice(1); if(TABS.includes(h)) showTab(h); })();
+</script>
+</body>
+</html>
